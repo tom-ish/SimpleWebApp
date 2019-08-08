@@ -21,19 +21,19 @@
             @b4.email(
                 loginForm("email"),
                 Symbol("placeholder") -> "username or example@email.com",
-                Symbol("id") -> "login-username",
-                Symbol("size") -> 50
+                Symbol("id") -> "login_email",
+                Symbol("size") -> 50,
             )
             @b4.password(
                 loginForm("password"),
-                Symbol("id") -> "login-password",
-                Symbol("placeholder") -> "Password"
-            )
+                Symbol("id") -> "login_password",
+                Symbol("placeholder") -> "Password",
+    )
             @b4.checkbox(
                 loginForm("remember"),
                 Symbol("_text") -> "Remember me",
-                Symbol("value") -> true
-            )
+                Symbol("value") -> true,
+    )
         }
         @b4.submit(
             Symbol("class") -> "btn btn-default",

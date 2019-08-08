@@ -1,0 +1,8 @@
+# form labels
+username=Username:
+email=Email Address:
+age=Age:
+agree=I agree to the Terms and Conditions:
+
+# standard error messages
+error.invalidForm=The form is not filled correctly

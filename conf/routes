@@ -7,8 +7,8 @@ GET     /                           controllers.AuthenticationController.load
 
 # Authentication page
 GET     /authenticate               controllers.AuthenticationController.loadAuthenticationForm
-POST    /authenticate               controllers.AuthenticationController.validateLoginForm
 POST    /register                   controllers.AuthenticationController.validateRegisterForm
+POST    /validate                   controllers.AuthenticationController.validateLoginForm
 
 # Authenticated page
 GET     /welcome                    controllers.AuthenticatedController.load

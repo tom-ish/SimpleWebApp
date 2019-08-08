@@ -10,3 +10,6 @@
 .navbar-default {
     background-color: #AACCDD;
 }
+
+input:valid { color: green; }
+input:invalid { color: red; }
