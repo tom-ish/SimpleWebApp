@@ -1,0 +1,12 @@
+.form-content {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    background-color: #ABCDEF;
+    border-radius: .25rem;
+}
+
+.navbar-default {
+    background-color: #AACCDD;
+}

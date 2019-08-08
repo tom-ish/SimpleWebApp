@@ -3,8 +3,16 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
-GET     /db                         controllers.Application.db
+GET     /                           controllers.AuthenticationController.load
+
+# Authentication page
+GET     /authenticate               controllers.AuthenticationController.loadAuthenticationForm
+POST    /authenticate               controllers.AuthenticationController.validateLoginForm
+POST    /register                   controllers.AuthenticationController.validateRegisterForm
+
+# Authenticated page
+GET     /welcome                    controllers.AuthenticatedController.load
+GET     /logout                     controllers.AuthenticatedController.logout
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file               controllers.Assets.versioned(file)

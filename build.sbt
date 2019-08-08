@@ -1,16 +1,28 @@
-name := """play-getting-started"""
+name := """simple-web-app"""
+
+herokuAppName in Compile := "simple-web-app"
 
 version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.11.7"
+resolvers += Resolver.sonatypeRepo("snapshots")
+
+scalaVersion := "2.13.0"
+
+val playSlickVersion = "4.0.2"
 
 libraryDependencies ++= Seq(
-  jdbc,
-  cache,
-  "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
-  ws
+  guice,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test,
+  "org.postgresql" % "postgresql" % "42.2.6",
+  "com.typesafe.play" %% "play-slick" % playSlickVersion,
+  "com.typesafe.play" %% "play-slick-evolutions" % playSlickVersion,
+  "com.adrianhurt" %% "play-bootstrap" % "1.5.1-P27-B4"
 )
 
-libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _ )
+scalacOptions ++= Seq(
+  "-feature",
+  "-deprecation",
+  "-Xfatal-warnings"
+)

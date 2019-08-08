@@ -1,0 +1,44 @@
+@(loginForm: Form[LoginData])(implicit request: MessagesRequestHeader)
+
+@implicitFieldConstructor = @{ b4.vertical.fieldConstructor("col-md-2", "col-md-10") }
+
+<div id="login-form">
+    <br/>
+    <h3>Please log in</h3>
+    <br/>
+
+    @request.flash.data.map { case(name, value) => <div>@name: @value</div> }
+
+    @* Global errors are not tied to any particular form field *@
+    @if(loginForm.hasGlobalErrors) {
+        @loginForm.globalErrors.map { error: FormError => <div>Error: @error.key: @error.message</div> }
+    }
+
+    @helper.form(action = routes.AuthenticationController.validateLoginForm(), Symbol("id") -> "user-login-form") {
+        @helper.CSRF.formField
+
+        @b4.vertical.form(routes.AuthenticationController.validateLoginForm()) { implicit vfc =>
+            @b4.email(
+                loginForm("email"),
+                Symbol("placeholder") -> "username or example@email.com",
+                Symbol("id") -> "login-username",
+                Symbol("size") -> 50
+            )
+            @b4.password(
+                loginForm("password"),
+                Symbol("id") -> "login-password",
+                Symbol("placeholder") -> "Password"
+            )
+            @b4.checkbox(
+                loginForm("remember"),
+                Symbol("_text") -> "Remember me",
+                Symbol("value") -> true
+            )
+        }
+        @b4.submit(
+            Symbol("class") -> "btn btn-default",
+            Symbol("onclick") -> "serverServices.login()"
+        ){ Login }
+    }
+
+</div>
