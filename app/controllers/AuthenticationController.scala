@@ -30,7 +30,7 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents)
         BadRequest(views.html.start(routes.AuthenticationController.loadAuthenticationForm().toString))
     }
     def success = { loginForm : LoginData =>
-      Redirect(routes.AuthenticatedController.load())
+      Redirect(routes.AuthenticatedUserController.load())
         .flashing("info" -> "You are logged in.")
         .withSession(
           Global.SESSION_USERNAME_KEY -> loginForm.email,
@@ -46,8 +46,7 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents)
       BadRequest(views.html.start(routes.AuthenticationController.loadAuthenticationForm().toString))
     }
     def success = { registerData : RegisterData =>
-      request.session + (models.Global.SESSION_USERNAME_KEY, "dummy")
-      Redirect(routes.AuthenticationController.load)
+      Redirect(routes.AuthenticatedUserController.load)
         .flashing("info" -> "You are registered in.")
         .withSession(
           Global.SESSION_USERNAME_KEY -> registerData.email,

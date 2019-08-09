@@ -1,5 +1,6 @@
 package utils
 
+import scala.language.postfixOps
 import scala.concurrent.duration._
 
 object Const {

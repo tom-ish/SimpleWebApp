@@ -20,6 +20,8 @@ class AuthenticatedUserAction @Inject()(parser: BodyParsers.Default)(implicit ec
                 block(request)
               else
                 Future.successful(Unauthorized("Dude, your session has expired"))
+            case None =>
+              Future.successful(Forbidden("Dude, are you sure you're logged?"))
           }
         }
       }
