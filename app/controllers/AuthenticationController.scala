@@ -34,6 +34,7 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents)
         .flashing("info" -> "You are logged in.")
         .withSession(
           Global.SESSION_USERNAME_KEY -> loginForm.email,
+          Global.SESSION_EXPIRATION_DATE -> (System.currentTimeMillis() + Const.SESSION_DURATION.toMillis).toString,
           "csrfToken" -> CSRF.getToken.get.value)
     }
     LoginData.loginForm.bindFromRequest.fold(failure, success)
@@ -48,7 +49,9 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents)
       request.session + (models.Global.SESSION_USERNAME_KEY, "dummy")
       Redirect(routes.AuthenticationController.load)
         .flashing("info" -> "You are registered in.")
-        .withSession(Global.SESSION_USERNAME_KEY -> registerData.email,
+        .withSession(
+          Global.SESSION_USERNAME_KEY -> registerData.email,
+          Global.SESSION_EXPIRATION_DATE -> (System.currentTimeMillis() + Const.SESSION_DURATION.toMillis).toString,
           "csrfToken" -> CSRF.getToken.get.value)
     }
     RegisterData.registerForm.bindFromRequest.fold(failure,success)
