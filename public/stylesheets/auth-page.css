@@ -28,5 +28,4 @@ h1, h2, h3, h4, h5, h6, .form-check-label { color: #343a40!important }
     border-color: #dee2e6 #dee2e6 #dee2e6!important;
 }
 
-input:valid { color: green; }
 input:invalid { color: red; }

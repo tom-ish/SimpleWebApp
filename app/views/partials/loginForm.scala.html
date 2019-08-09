@@ -15,24 +15,22 @@
     }
 
     @helper.form(action = routes.AuthenticationController.validateLoginForm(), Symbol("id") -> "user-login-form") {
-        @helper.CSRF.formField
-
-        @b4.vertical.form(routes.AuthenticationController.validateLoginForm()) { implicit vfc =>
-            @b4.email(
+        @b4.vertical.formCSRF(routes.AuthenticationController.validateLoginForm()) { implicit vfc =>
+            @b4.text(
                 loginForm("email"),
                 Symbol("placeholder") -> "username or example@email.com",
                 Symbol("id") -> "login_email",
-                Symbol("size") -> 50,
+                Symbol("size") -> 50
             )
             @b4.password(
                 loginForm("password"),
                 Symbol("id") -> "login_password",
-                Symbol("placeholder") -> "Password",
+                Symbol("placeholder") -> "Password"
     )
             @b4.checkbox(
                 loginForm("remember"),
                 Symbol("_text") -> "Remember me",
-                Symbol("value") -> true,
+                Symbol("value") -> true
     )
         }
         @b4.submit(

@@ -15,31 +15,33 @@
     }
 
     @helper.form(action = routes.AuthenticationController.validateRegisterForm(), Symbol("id") -> "user-register-form") {
-        @helper.CSRF.formField
-
-        @b4.vertical.form(routes.AuthenticationController.validateRegisterForm()) { implicit vfc =>
+        @b4.vertical.formCSRF(routes.AuthenticationController.validateRegisterForm()) { implicit vfc =>
             @b4.text(
                 registerForm("username"),
-                Symbol("placeholder") -> "username",
+                Symbol("placeholder") -> "Username",
                 Symbol("id") -> "register_username",
+                Symbol("_help") -> "Between 6 and 32 characters",
                 Symbol("size") -> 50
-            )
+    )
             @b4.email(
                 registerForm("email"),
                 Symbol("placeholder") -> "example@email.com",
                 Symbol("id") -> "register_email",
                 Symbol("size") -> 50
-            )
+    )
             @b4.password(
                 registerForm("password"),
                 Symbol("id") -> "register_password",
-                Symbol("placeholder") -> "Password"
-            )
+                Symbol("placeholder") -> "Password",
+                Symbol("_help") -> "Between 6 and 32 characters"
+    )
         }
         @b4.submit(
             Symbol("class") -> "btn btn-default auth-btn",
             Symbol("onclick") -> "serverServices.register()"
         ){ Register }
     }
+
+
 
 </div>
