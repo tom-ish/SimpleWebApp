@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 import models.{Global, LoginData, RegisterData}
-import play.api.Logging
+import play.api.{Logger, Logging}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{AnyContent, MessagesAbstractController, MessagesControllerComponents, MessagesRequest}
@@ -15,8 +15,10 @@ import scala.util.Success
 
 @Singleton
 class AuthenticationController @Inject()(cc: MessagesControllerComponents, accountService: AccountService)
-  extends MessagesAbstractController(cc) with Logging with I18nSupport
+  extends MessagesAbstractController(cc) with I18nSupport
 {
+  val logger: Logger = Logger(this.getClass())
+
   def load = Action { implicit request: MessagesRequest[AnyContent] =>
     val usernameOption = request.session.get(Const.USERNAME)
     usernameOption.map { username =>
@@ -50,6 +52,7 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents, accou
       BadRequest(views.html.start(routes.AuthenticationController.loadAuthenticationForm().toString))
     }
     def success = { registerData : RegisterData =>
+      logger.info("register form success entered")
       accountService.addAccount(registerData.username, registerData.email, registerData.password).value match {
         case Some(Success(true)) =>
           Redirect(routes.AuthenticatedUserController.load)
