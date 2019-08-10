@@ -15,7 +15,7 @@ class PasswordTableDef(tag: Tag) extends Table[Password](tag, "passwords") {
 
   def id = column[UUID]("id", O.PrimaryKey, O.AutoInc, O.Unique)
   def accountId = column[UUID]("accountId")
-  def password = column[String]("password")
+  def password = column[String]("pass")
 
   override def * =
     (accountId, password, id) <> ((Password.apply _).tupled, Password.unapply)
