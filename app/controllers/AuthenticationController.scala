@@ -1,20 +1,22 @@
 package controllers
 
+import entities.{LoginData, RegisterData}
 import javax.inject.{Inject, Singleton}
-import models.{Global, LoginData, RegisterData}
+import models.Global
 import play.api.{Logger, Logging}
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{AnyContent, MessagesAbstractController, MessagesControllerComponents, MessagesRequest}
 import play.filters.csrf.CSRF
 import services.AccountService
-import utils.Const
+import utils.{Const, StatusCodes}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Success
 
 @Singleton
 class AuthenticationController @Inject()(cc: MessagesControllerComponents, accountService: AccountService)
+                                        (implicit executionContext: ExecutionContext)
   extends MessagesAbstractController(cc) with I18nSupport
 {
   val logger: Logger = Logger(this.getClass())
@@ -30,41 +32,50 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents, accou
     Ok(views.html.authentication(LoginData.loginForm, RegisterData.registerForm))
   }
 
-  def validateLoginForm = Action { implicit request: MessagesRequest[AnyContent] =>
+  def wrongAuthentication(msg: String) =
+    Redirect(routes.AuthenticationController.loadAuthenticationForm().toString) flashing ("wrong authentication"-> msg)
+
+  def validateLoginForm = Action.async { implicit request: MessagesRequest[AnyContent] =>
     def failure = { formWithErrors : Form[LoginData] =>
         logger.warn(s"form error: ${formWithErrors}")
-        BadRequest(views.html.start(routes.AuthenticationController.loadAuthenticationForm().toString))
+        Future.successful(wrongAuthentication("validateLoginForm"))
     }
     def success = { loginForm : LoginData =>
-      Redirect(routes.AuthenticatedUserController.load())
-        .flashing("info" -> "You are logged in.")
-        .withSession(
-          Global.SESSION_USERNAME_KEY -> loginForm.email,
-          Global.SESSION_EXPIRATION_DATE -> (System.currentTimeMillis() + Const.SESSION_DURATION.toMillis).toString,
-          "csrfToken" -> CSRF.getToken.get.value)
+      val status = accountService.attemptLogin(loginForm)
+      status map {
+        case StatusCodes.OK =>
+          Redirect(routes.AuthenticatedUserController.load())
+            .flashing("info" -> "You are logged in.")
+            .withSession(
+              Global.SESSION_USERNAME_KEY -> loginForm.email,
+              Global.SESSION_EXPIRATION_DATE -> (System.currentTimeMillis() + Const.SESSION_DURATION.toMillis).toString,
+              "csrfToken" -> CSRF.getToken.get.value)
+        case error =>
+          wrongAuthentication(s"validateLoginForm - $error")
+      }
     }
     LoginData.loginForm.bindFromRequest.fold(failure, success)
   }
 
-  def validateRegisterForm = Action { implicit request: MessagesRequest[AnyContent] =>
+  def validateRegisterForm = Action.async { implicit request: MessagesRequest[AnyContent] =>
     def failure = { formWithErrors : Form[RegisterData] =>
       logger.warn(s"register form error: $formWithErrors")
-      BadRequest(views.html.start(routes.AuthenticationController.loadAuthenticationForm().toString))
+      Future.successful(wrongAuthentication("validateRegisterForm"))
     }
     def success = { registerData : RegisterData =>
       logger.info("register form success entered")
-      accountService.addAccount(registerData.username, registerData.email, registerData.password).value match {
-        case Some(Success(true)) =>
+      val status = accountService.addAccount(registerData.username, registerData.email, registerData.password)
+      status map {
+        case StatusCodes.OK =>
           Redirect(routes.AuthenticatedUserController.load)
             .flashing("info" -> "You are registered in.")
             .withSession(
               Global.SESSION_USERNAME_KEY -> registerData.email,
               Global.SESSION_EXPIRATION_DATE -> (System.currentTimeMillis() + Const.SESSION_DURATION.toMillis).toString,
               "csrfToken" -> CSRF.getToken.get.value)
-        case Some(Success(false)) =>
-          NoContent
-        case _ =>
-          BadRequest(views.html.start(routes.AuthenticationController.loadAuthenticationForm().toString))
+
+        case error =>
+          wrongAuthentication(s"validateRegisterForm - $error")
       }
     }
     RegisterData.registerForm.bindFromRequest.fold(failure,success)

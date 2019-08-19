@@ -1,4 +1,4 @@
-package models
+package entities
 
 import play.api.data.Form
 import play.api.data.Forms._
