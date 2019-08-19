@@ -44,18 +44,24 @@ class AccountService @Inject()(accounts: Accounts, passwords: Passwords)
     val foundAccountFuture = getAccount(Const.BY_EMAIL, formData.email)
     foundAccountFuture flatMap {
       case Some(foundAccount: Account) => {
-        val passwordCorrect = passwords.isPasswordCorrect(foundAccount._id.get, formData.password)
-        passwordCorrect map {
-          case true =>
-            StatusCodes.OK
+        val foundPasswordFuture = getPassword(foundAccount._id.get)
+        foundPasswordFuture flatMap {
+          case Some(password: Password) =>
+            if(formData.password == password.password)
+              Future.successful((StatusCodes.OK, ""))
+            else
+              Future.successful((StatusCodes.ERROR_PASSWORD_MISMATCH, "foundPasswordFuture"))
           case _ =>
-            StatusCodes.ERROR_PASSWORD_MISMATCH
+            Future.successful((StatusCodes.ERROR_PASSWORD_MISMATCH, foundAccount._id.get + " <=> password not found"))
         }
       }
       case _ =>
-        Future.successful(StatusCodes.ERROR_UNKNOWN_ACCOUNT)
+        Future.successful((StatusCodes.ERROR_UNKNOWN_ACCOUNT, ""))
     }
   }
+
+  def getPassword(accountId: String): Future[Option[Password]] =
+    passwords.findPassword(accountId)
 
   def deleteAccount(id: UUID) : Future[Int] = ???
   def listAllAccounts : Future[Seq[Account]] = ???

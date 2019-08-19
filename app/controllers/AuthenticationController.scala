@@ -43,15 +43,15 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents, accou
     def success = { loginForm : LoginData =>
       val status = accountService.attemptLogin(loginForm)
       status map {
-        case StatusCodes.OK =>
+        case (StatusCodes.OK, msg) =>
           Redirect(routes.AuthenticatedUserController.load())
             .flashing("info" -> "You are logged in.")
             .withSession(
               Global.SESSION_USERNAME_KEY -> loginForm.email,
               Global.SESSION_EXPIRATION_DATE -> (System.currentTimeMillis() + Const.SESSION_DURATION.toMillis).toString,
               "csrfToken" -> CSRF.getToken.get.value)
-        case error =>
-          wrongAuthentication(s"validateLoginForm - $error")
+        case (error, msg) =>
+          wrongAuthentication(s"Login - $error\n - $msg")
       }
     }
     LoginData.loginForm.bindFromRequest.fold(failure, success)
@@ -75,7 +75,7 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents, accou
               "csrfToken" -> CSRF.getToken.get.value)
 
         case error =>
-          wrongAuthentication(s"validateRegisterForm - $error")
+          wrongAuthentication(s"Register - $error")
       }
     }
     RegisterData.registerForm.bindFromRequest.fold(failure,success)

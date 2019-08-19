@@ -1,6 +1,7 @@
 package models.password
 
 import javax.inject.Inject
+import models.account.Account
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
@@ -38,17 +39,20 @@ class Passwords @Inject() (
       )
     ))
 
-  override def findPassword(id: String) =
+  override def findPassword(accountId: String) =
     passwordsCollectionFuture flatMap(
-      _.find(Json.obj("accoundId" -> id), Option.empty[JsObject]).one[Password]
+      _.find(Json.obj("accountId" -> accountId), Option.empty[JsObject]).one[Password]
       )
 
 
   def isPasswordCorrect(accountId: String, passwordStr: String) = {
     val password = findPassword(accountId)
-    password map {
-      case Some(p : Password) if p.password == passwordStr => true
-      case _ => false
+    password flatMap {
+      case Some(p : Password) =>
+        if (p.password == passwordStr) Future.successful((true, ""))
+        else Future.successful((false, "mismatch"))
+      case error =>
+        Future.successful((false, s"$error"))
     }
   }
 

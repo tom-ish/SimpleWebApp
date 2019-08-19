@@ -21,5 +21,5 @@ trait PasswordDAO {
    */
   def findPassword(id: String): Future[Option[Password]]
 
-  def isPasswordCorrect(accountId: String, passwordStr: String) : Future[Boolean]
+  def isPasswordCorrect(accountId: String, passwordStr: String) : Future[(Boolean, String)]
 }
