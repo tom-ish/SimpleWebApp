@@ -22,10 +22,10 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents, accou
   val logger: Logger = Logger(this.getClass())
 
   def load = Action { implicit request: MessagesRequest[AnyContent] =>
-    val usernameOption = request.session.get(Const.USERNAME)
-    usernameOption.map { username =>
-      Ok(views.html.start(routes.AuthenticationController.loadAuthenticationForm().toString))
-    }.getOrElse(Ok(views.html.start(routes.AuthenticationController.loadAuthenticationForm().toString)))
+    val usernameOption = request.session.get(Global.SESSION_USERNAME_KEY)
+    usernameOption
+      .map(_ => Ok(views.html.start(routes.AuthenticatedUserController.load().toString)))
+      .getOrElse(Ok(views.html.start(routes.AuthenticationController.loadAuthenticationForm().toString)))
   }
 
   def loadAuthenticationForm = Action { implicit request: MessagesRequest[AnyContent] =>
@@ -44,7 +44,7 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents, accou
       val status = accountService.attemptLogin(loginForm)
       status map {
         case (StatusCodes.OK, msg) =>
-          Redirect(routes.AuthenticatedUserController.load())
+          Ok(views.html.start(routes.AuthenticatedUserController.load().toString))
             .flashing("info" -> "You are logged in.")
             .withSession(
               Global.SESSION_USERNAME_KEY -> loginForm.email,
@@ -67,7 +67,7 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents, accou
       val status = accountService.addAccount(registerData.username, registerData.email, registerData.password)
       status map {
         case StatusCodes.OK =>
-          Redirect(routes.AuthenticatedUserController.load)
+          Ok(views.html.start(routes.AuthenticatedUserController.load().toString))
             .flashing("info" -> "You are registered in.")
             .withSession(
               Global.SESSION_USERNAME_KEY -> registerData.email,

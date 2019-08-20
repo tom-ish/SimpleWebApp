@@ -1,4 +1,4 @@
-@(loginForm: Form[LoginData])(implicit request: MessagesRequestHeader)
+@(loginForm: Form[entities.LoginData])(implicit request: MessagesRequestHeader)
 
 @implicitFieldConstructor = @{ b4.vertical.fieldConstructor("col-md-2", "col-md-10") }
 
@@ -6,13 +6,6 @@
     <br/>
     <h3>Please log in</h3>
     <br/>
-
-    @request.flash.data.map { case(name, value) => <div>@name: @value</div> }
-
-    @* Global errors are not tied to any particular form field *@
-    @if(loginForm.hasGlobalErrors) {
-        @loginForm.globalErrors.map { error: FormError => <div>Error: @error.key: @error.message</div> }
-    }
 
     @helper.form(action = routes.AuthenticationController.validateLoginForm(), Symbol("id") -> "user-login-form") {
         @b4.vertical.formCSRF(routes.AuthenticationController.validateLoginForm()) { implicit vfc =>

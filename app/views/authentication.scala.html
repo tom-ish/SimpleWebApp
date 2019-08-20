@@ -1,6 +1,6 @@
 @import views.html.partials._
 
-@(logForm: Form[LoginData], regForm: Form[RegisterData])(implicit request: MessagesRequestHeader, flash: Flash)
+@(logForm: Form[entities.LoginData], regForm: Form[entities.RegisterData])(implicit request: MessagesRequestHeader, flash: Flash)
 
 <h1 class="title">Welcome to Play!</h1>
 
@@ -23,3 +23,42 @@
         </div>
     </div>
 </div>
+
+@if(!request.flash.isEmpty || logForm.hasGlobalErrors || regForm.hasGlobalErrors){
+    <div id="popup1" class="overlay">
+        <div class="popup">
+            @if(!request.flash.isEmpty) {
+                @request.flash.data.map { case(name,value) => {
+                        <h2>@name</h2>
+                        <a class="close" href="#">&times;</a>
+                        <div class="content">
+                            @value
+                        </div>
+                    }
+                }
+            }
+            else {
+                @if(logForm.hasGlobalErrors) {
+                    @logForm.globalErrors.map { error: FormError => {
+                        <h2>@error.key</h2>
+                        <a class="close" href="#">&times;</a>
+                        <div class="content">
+                            @error.message
+                        </div>
+                        }
+                    }
+                }
+                else {
+                    @regForm.globalErrors.map { error: FormError => {
+                        <h2>@error.key</h2>
+                        <a class="close" href="#">&times;</a>
+                        <div class="content">
+                            @error.message
+                        </div>
+                        }
+                    }
+                }
+            }
+        </div>
+    </div>
+}

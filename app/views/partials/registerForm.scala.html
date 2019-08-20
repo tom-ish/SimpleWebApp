@@ -1,4 +1,4 @@
-@(registerForm: Form[RegisterData])(implicit request: MessagesRequestHeader)
+@(registerForm: Form[entities.RegisterData])(implicit request: MessagesRequestHeader)
 
 @implicitFieldConstructor = @{ b4.vertical.fieldConstructor("col-md-2", "col-md-10") }
 
@@ -6,13 +6,6 @@
     <br/>
     <h3>Please register</h3>
     <br/>
-
-    @request.flash.data.map { case(name, value) => <div>@name: @value</div> }
-
-    @* Global errors are not tied to any particular form field *@
-    @if(registerForm.hasGlobalErrors) {
-        @registerForm.globalErrors.map { error: FormError => <div>Error: @error.key: @error.message</div> }
-    }
 
     @helper.form(action = routes.AuthenticationController.validateRegisterForm(), Symbol("id") -> "user-register-form") {
         @b4.vertical.formCSRF(routes.AuthenticationController.validateRegisterForm()) { implicit vfc =>
