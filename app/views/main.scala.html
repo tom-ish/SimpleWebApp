@@ -8,18 +8,21 @@
         <title>@title</title>
         <title>Scala Getting Started on Heroku</title>
 
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")">
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/auth-page.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("bootstrap/css/bootstrap.min.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("font-awesome/css/all.min.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("font-awesome/css/fontawesome.min.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/style.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/style-responsive.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/navbar.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/auth-page.css")">
 
         <script src="@routes.Assets.versioned("javascripts/jquery-3.4.1.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.versioned("bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.versioned("font-awesome/js/all.min.js")" type="text/javascript"></script>
 
     </head>
     <body>
-        <div class="background">
-        </div>
-        @nav()
         @content
 
         <script src="@routes.Assets.versioned("javascripts/auth-page.js")" type="text/javascript"></script>

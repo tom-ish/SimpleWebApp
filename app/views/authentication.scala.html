@@ -25,19 +25,18 @@
 </div>
 
 @if(!request.flash.isEmpty || logForm.hasGlobalErrors || regForm.hasGlobalErrors){
-    <div id="popup1" class="overlay">
+    <div id="popup" class="overlay">
         <div class="popup">
             @if(!request.flash.isEmpty) {
-                @request.flash.data.map { case(name,value) => {
+                @request.flash.data.map { case(name,value) =>
                         <h2>@name</h2>
                         <a class="close" href="#">&times;</a>
                         <div class="content">
                             @value
                         </div>
-                    }
+
                 }
-            }
-            else {
+            } else {
                 @if(logForm.hasGlobalErrors) {
                     @logForm.globalErrors.map { error: FormError => {
                         <h2>@error.key</h2>
@@ -47,8 +46,7 @@
                         </div>
                         }
                     }
-                }
-                else {
+                } else {
                     @regForm.globalErrors.map { error: FormError => {
                         <h2>@error.key</h2>
                         <a class="close" href="#">&times;</a>

@@ -1,7 +1,36 @@
-@(username: String)(implicit request: RequestHeader, flash: Flash)
+@(landingRoute: String, chatroomRoute: String)(implicit request: RequestHeader, flash: Flash)
 
-<h3>Welcome back @username!</h3>
+<!DOCTYPE html>
 
-<div>
-    <a href="@routes.AuthenticatedUserController.logout()">Logout</a>
-</div>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Scala Getting Started on Heroku</title>
+
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("bootstrap/css/bootstrap.min.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("font-awesome/css/all.min.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("font-awesome/css/fontawesome.min.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/style.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/style-responsive.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/navbar.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/drop-zone.css")">
+
+    <script src="@routes.Assets.versioned("javascripts/jquery-3.4.1.min.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.versioned("bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.versioned("font-awesome/js/all.min.js")" type="text/javascript"></script>
+
+</head>
+<body>
+    <input type="hidden" id="landingRoute" value="@landingRoute">
+    <input type="hidden" id="chatroomRoute" value="@chatroomRoute">
+    <section id="container">
+        @nav()
+        @sideMenu()
+        <section id="main-container">
+            <section id="main-content"></section>
+        </section>
+    </section>
+    <script src="@routes.Assets.versioned("javascripts/landing.js")" type="text/javascript"></script>
+</body>
+</html>

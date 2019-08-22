@@ -7,7 +7,7 @@ object Const {
   final val USERNAME = "username"
   final val PASSWORD = "password"
   final val CSRF_TOKEN = "csrfToken"
-  val SESSION_DURATION = 30 minutes
+  val SESSION_DURATION = 120 minutes
 
   sealed trait MODE
   case object BY_USERNAME extends MODE
