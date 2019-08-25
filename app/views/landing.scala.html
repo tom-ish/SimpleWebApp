@@ -1,4 +1,4 @@
-@(landingRoute: String, chatroomRoute: String)(implicit request: RequestHeader, flash: Flash)
+@(userId: String, username: String, expirationDate: String, landingRoute: String, dashboardRoute: String, chatroomRoute: String)(implicit request: RequestHeader, flash: Flash)
 
 <!DOCTYPE html>
 
@@ -14,7 +14,9 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/style.css")">
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/style-responsive.css")">
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/navbar.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/landing.css")">
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/drop-zone.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/chatroom.css")">
 
     <script src="@routes.Assets.versioned("javascripts/jquery-3.4.1.min.js")" type="text/javascript"></script>
     <script src="@routes.Assets.versioned("bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
@@ -23,14 +25,21 @@
 </head>
 <body>
     <input type="hidden" id="landingRoute" value="@landingRoute">
+    <input type="hidden" id="dashboardRoute" value="@dashboardRoute">
     <input type="hidden" id="chatroomRoute" value="@chatroomRoute">
+    <input type="hidden" id="userId" value="@userId">
+    <input type="hidden" id="username" value="@username">
+    <input type="hidden" id="expirationDate" value="@expirationDate">
+
     <section id="container">
         @nav()
         @sideMenu()
         <section id="main-container">
-            <section id="main-content"></section>
+            <section id="main-content" class="wrapper site-min-height">
+            </section>
         </section>
     </section>
     <script src="@routes.Assets.versioned("javascripts/landing.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.versioned("javascripts/sideMenu.js")" type="text/javascript"></script>
 </body>
 </html>

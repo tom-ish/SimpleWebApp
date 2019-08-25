@@ -14,12 +14,12 @@ class AuthenticatedUserAction @Inject()(parser: BodyParsers.Default)(implicit ec
   extends MessagesActionBuilderImpl(parser, messagesApi) {
 
   override def invokeBlock[A](request: Request[A], block: MessagesRequest[A] => Future[Result]): Future[Result] = {
-    request.session.get(Global.SESSION_USERNAME_KEY) match {
+    request.session.get(Global.SESSION_ID_KEY) match {
         case None =>
           Future.successful(Redirect(routes.AuthenticationController.load())
             .flashing("info" -> "You are logged out.")
             .withNewSession)
-        case Some(user) => {
+        case Some(id) => {
           request.session.get(Global.SESSION_EXPIRATION_DATE) match {
             case Some(expirationDate : String) =>
               if(System.currentTimeMillis() < new Date(expirationDate.toLong).getTime)

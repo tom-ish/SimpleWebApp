@@ -15,7 +15,8 @@ POST    /validate                   controllers.AuthenticationController.validat
 GET     /welcome                    controllers.AuthenticatedUserController.load
 GET     /logout                     controllers.AuthenticatedUserController.logout
 GET     /dropZone                   controllers.AuthenticatedUserController.dropZone
-GET     /chatroom                   controllers.AuthenticatedUserController.chatroom
+GET     /chatroom                   controllers.ChatroomController.chatroom
+GET     /socket                     controllers.ChatroomController.socket
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(file)

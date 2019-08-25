@@ -1,3 +1,4 @@
+/*
 //    sidebar toggle
 $(function() {
 function responsiveView() {
@@ -15,37 +16,28 @@ function responsiveView() {
 $(window).on('load', responsiveView);
 $(window).on('resize', responsiveView);
 });
+*/
 
+console.log("landing.js called");
 var landingRoute = $("#landingRoute").val();
-var chatroomRoute = $("#chatroomRoute").val();
+var userId = $("#userId").val();
+var username= $("#username").val();
+var expirationDate = $("#expirationDate").val();
 
-$("#main-content").load(landingRoute)
+localStorage.setItem("userId", userId);
+localStorage.setItem("username", username);
+localStorage.setItem("expirationDate", expirationDate);
 
-var sideMenu = {
-    updateSideMenuDisplay: function() {
-        console.log("fa-bars click");
-        if ($('#sidebar > ul').is(":visible") === true) {
-          $('#main-container').css({
-            'margin-left': '0px'
-          });
-          $('#sidebar').css({
-            'margin-left': '-210px'
-          });
-          $('#sidebar > ul').hide();
-          $("#container").addClass("sidebar-closed");
-        } else {
-          $('#main-container').css({
-            'margin-left': '210px'
-          });
-          $('#sidebar > ul').show();
-          $('#sidebar').css({
-            'margin-left': '0'
-          });
-          $("#container").removeClass("sidebar-closed");
-        }
-    },
-    chatroomView: function() {
-        console.log("updating chatroom view");
-        $("#main-content").load(chatroomRoute)
-    }
-}
+$("#main-content").load(landingRoute);
+
+
+var prettyPrintDate = function (dateStr) {
+    console.log(dateStr);
+    var time = new Date(dateStr);
+    var hours = time.getHours();
+    var minutes = time.getMinutes();
+    console.log(time);
+    console.log(hours);
+    console.log(minutes);
+    return hours + ":" + minutes;
+};

@@ -1,0 +1,17 @@
+body {
+    height: 100%;
+    width: 100%;
+    min-width: 100%;
+    background-color: #c4e0e5;
+}
+
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+}
+
+#sidebar{
+    z-index: 500;
+}

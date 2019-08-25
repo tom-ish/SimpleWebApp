@@ -1,5 +1,6 @@
-@(username: String)(implicit request: RequestHeader, flash: Flash)
-<h3>Welcome back @username!</h3>
+@()(implicit request: RequestHeader, flash: Flash)
+<h3>Welcome back!</h3>
+<div id="infoContainer"></div>
 
     <!--
     <section class="wrapper site-min-height">
@@ -14,3 +15,6 @@
     </section>
     -->
     <!-- /wrapper -->
+
+
+<script src="@routes.Assets.versioned("javascripts/drop-zone.js")" type="text/javascript"></script>

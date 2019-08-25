@@ -54,18 +54,23 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents, accou
         logger.warn(s"form error: ${formWithErrors}")
         Future.successful(wrongAuthentication("validateLoginForm"))
     }
-    def success = { loginForm : LoginData =>
-      val status = accountService.attemptLogin(loginForm)
-      status map {
-        case (StatusCodes.OK, msg) =>
+    def success = { loginData : LoginData =>
+      val res = for {
+        status <- accountService.attemptLogin(loginData)
+        accountOption <- accountService.getAccount(Const.BY_EMAIL, loginData.email)
+      } yield (status, accountOption)
+
+      res map {
+        case ((StatusCodes.OK, _), accountOption) =>
           Redirect(routes.AuthenticatedUserController.load)
-   //       Ok(views.html.start(routes.AuthenticatedUserController.load().toString))
+            //       Ok(views.html.start(routes.AuthenticatedUserController.load().toString))
             .flashing("info" -> "You are logged in.")
             .withSession(
-              Global.SESSION_USERNAME_KEY -> loginForm.email,
+              Global.SESSION_ID_KEY -> accountOption.get._id.get,
+              Global.SESSION_USERNAME -> accountOption.get.username,
               Global.SESSION_EXPIRATION_DATE -> (System.currentTimeMillis() + Const.SESSION_DURATION.toMillis).toString,
               "csrfToken" -> CSRF.getToken.get.value)
-        case (error, msg) =>
+        case ((error, msg), _) =>
           wrongAuthentication(s"Login - $error\n - $msg")
       }
     }
@@ -79,18 +84,23 @@ class AuthenticationController @Inject()(cc: MessagesControllerComponents, accou
     }
     def success = { registerData : RegisterData =>
       logger.info("register form success entered")
-      val status = accountService.addAccount(registerData.username, registerData.email, registerData.password)
-      status map {
-        case StatusCodes.OK =>
+
+      val res = for {
+        status <- accountService.addAccount(registerData.username, registerData.email, registerData.password)
+        account <- accountService.getAccount(Const.BY_EMAIL, registerData.email)
+      } yield (status, account)
+
+      res map {
+        case (StatusCodes.OK, accountOption) =>
           Redirect(routes.AuthenticatedUserController.load)
             //  Ok(views.html.start(routes.AuthenticatedUserController.load().toString))
             .flashing("info" -> "You are registered in.")
             .withSession(
-              Global.SESSION_USERNAME_KEY -> registerData.email,
+              Global.SESSION_ID_KEY ->  accountOption.get._id.get,
+              Global.SESSION_USERNAME -> accountOption.get.username,
               Global.SESSION_EXPIRATION_DATE -> (System.currentTimeMillis() + Const.SESSION_DURATION.toMillis).toString,
               "csrfToken" -> CSRF.getToken.get.value)
-
-        case error =>
+        case (error, _) =>
           wrongAuthentication(s"Register - $error")
       }
     }
